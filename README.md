@@ -2,7 +2,14 @@
 
 평가 대상 인원 수와 등수로 목표 점수를 조회하고, 모든 사업에 공통으로 적용할 업무별 등급과 배점을 출력하는 터미널 프로그램입니다.
 
-Python 3.12 이상에서 가상환경을 활성화한 뒤 저장소 루트에서 설치합니다.
+Python 3.12 이상에서 저장소 루트의 `src/givemes.py`를 바로 실행할 수 있습니다.
+
+```sh
+python src/givemes.py -n 10 -r 1
+python src/givemes.py -n 10
+```
+
+`givemes` 명령으로 실행하려면 가상환경을 활성화한 뒤 설치합니다.
 
 ```sh
 python -m pip install .

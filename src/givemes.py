@@ -72,3 +72,7 @@ def main(argv: list[str] | None = None) -> None:
         grades = [f"{grade} / {score}" for grade, score in task_grades(target)]
         lines.append(table_line([f"{rank}등", str(target), *grades], widths))
     print("\n".join(lines))
+
+
+if __name__ == "__main__":
+    main()
