@@ -38,14 +38,20 @@ class CliTests(TestCase):
                         total += weight * int(score)
                     self.assertEqual(total, 100 * target)
 
-    def test_single_rank_prefers_higher_weight(self):
+    def test_single_rank_prefers_most_a_grades(self):
         with redirect_stdout(output := StringIO()):
             main(["-n", "10", "-r", "1"])
         self.assertEqual(output.getvalue().splitlines(), [
             "| 등수 | 점수 | 업무40  | 업무30  | 업무20  | 업무10  |",
             "|------|------|---------|---------|---------|---------|",
-            "| 1등  | 98   | S / 100 | S / 100 | S / 100 | B / 80  |",
+            "| 1등  | 98   | S / 100 | S / 100 | A / 90  | S / 100 |",
         ])
+        with redirect_stdout(output := StringIO()):
+            main(["-n", "10", "-r", "5"])
+        self.assertIn("| 5등  | 91   | A / 90  | A / 90  | A / 90  | S / 100 |", output.getvalue().splitlines())
+        with redirect_stdout(output := StringIO()):
+            main(["-n", "10", "-r", "10"])
+        self.assertIn("| 10등 | 82   | A / 90  | C / 70  | A / 90  | C / 70  |", output.getvalue().splitlines())
 
     def test_invalid_inputs(self):
         cases = [[], ["-r", "1"], ["-n"], ["-n", "1"], ["-n", "16"],

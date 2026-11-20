@@ -25,12 +25,23 @@ GRADE_SCORES = (("S", 100), ("A", 90), ("B", 80), ("C", 70))
 
 
 def task_grades(target: int) -> tuple[tuple[str, int], ...]:
-    # 업무40부터 높은 배점을 먼저 탐색하므로 첫 일치 조합을 선택한다.
+    # 업무40에 C를 사용하지 않고, A 개수가 가장 많은 조합을 선택한다.
+    # A 개수가 같으면 업무40부터 높은 배점을 먼저 탐색하므로 첫 일치 조합이 남는다.
+    best: tuple[tuple[str, int], ...] | None = None
+    best_a_count = -1
     for grades in product(GRADE_SCORES, repeat=len(TASK_WEIGHTS)):
+        if grades[0][0] == "C":
+            continue
         weighted_total = sum(weight * score for weight, (_, score) in zip(TASK_WEIGHTS, grades))
-        if weighted_total == target * 100:
-            return grades
-    raise ValueError(f"목표 점수 {target}점을 만드는 업무 배점 조합이 없습니다.")
+        if weighted_total != target * 100:
+            continue
+        a_count = sum(1 for grade, _ in grades if grade == "A")
+        if a_count > best_a_count:
+            best = grades
+            best_a_count = a_count
+    if best is None:
+        raise ValueError(f"목표 점수 {target}점을 만드는 업무 배점 조합이 없습니다.")
+    return best
 
 
 def integer(value: str) -> int:
